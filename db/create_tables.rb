@@ -5,14 +5,15 @@ db = SQLite3::Database.new "db/address_bloc.sqlite"
 db.execute("DROP TABLE address_book;");
 db.execute("DROP TABLE entry;");
 
-db.execute <<-SQL 
+sql = <<-SQL 
 	CREATE TABLE address_book (
 		id INTEGER PRIMARY KEY,
 		name VARCHAR(30)
 	);
 SQL
+db.execute sql
 
-db.execute <<-SQL 
+sql = <<-SQL 
 	CREATE TABLE entry (
 		id INTEGER PRIMARY KEY,
 		address_book_id INTEGER,
@@ -22,3 +23,4 @@ db.execute <<-SQL
 		FOREIGN KEY (address_book_id) REFERENCES address_book(id)
 	);
 SQL
+db.execute sql

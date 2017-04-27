@@ -45,6 +45,10 @@ class MenuController
     end
   end
 
+  def test
+    puts Entry.find_by
+  end
+
   def view_all_entries
     address_book.entries.each do |entry|
       system "clear"
