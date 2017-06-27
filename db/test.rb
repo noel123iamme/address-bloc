@@ -84,12 +84,24 @@ BlocRecord.connect_to('db/address_bloc.sqlite')
 # puts Client.join({customer: :loan}, :address_book)
 # puts Client.join(:customer, :address_book)
 # puts Client.join(:customer)
+puts "Client.join.where..."
 Client.join({customer: :loan}, {address_book: :entry})
-puts Client.where('entry.email IS NULL')
+puts Client.where('entry.email IS NOT NULL')
 puts ""
-puts Client.join().where('name IS NOT NULL')
-
+# puts Loan.join().where('name IS NOT NULL').where()
+puts "Loan.join.where.where..."
+puts Loan.join().where('name IS NOT NULL').where({type: "LR"})
+puts ""
 # puts Client.columns.map{ |a| "client.#{a}" }.join ", "
+puts "Entry.update multi-record"
+Entry.update([1, 3, 5, 7, 9], [{name: "John"}, {email: "joe@blow.com"}, {phone_number: "123-456-7890"}])
+puts Entry.all
+puts ""
 
+puts "Loan.where.not..."
+puts Loan.where.not({type: "AR"}).not({type: "LR"})
+puts ""
 
+puts "Loan.not..."
+puts Loan.not("type not in ('AR', 'LR')")
 
