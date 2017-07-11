@@ -8,7 +8,8 @@ class MenuController
   end
 
   def main_menu
-    puts "#{@address_book.name} Address Book Selected\n#{@address_book.entries.count} entries"
+    puts "#{@address_book.name} Address Book Selected"
+    puts "#{@address_book.entries.count} entries"
     puts "0 - Switch AddressBook"
     puts "1 - View all entries"
     puts "2 - Create an entry"
@@ -17,7 +18,7 @@ class MenuController
     puts "5 - Exit"
     print "Enter your selection: "
 
-    selection = gets.to_i
+    selection = STDIN.gets.to_i
 
     case selection
       when 0 
@@ -56,7 +57,7 @@ class MenuController
       puts "#{index} - #{address_book.name}"
     end
 
-    index = gets.chomp.to_i
+    index = STDIN.gets.chomp.to_i
 
     @address_book = AddressBook.find(index + 1)
     system "clear"
@@ -68,6 +69,7 @@ class MenuController
   def view_all_entries
     @address_book.entries.each do |entry|
       system "clear"
+      puts "Address Book: #{entry.address_book.name} Entry"
       puts entry.to_s
       entry_submenu(entry)
     end
@@ -79,11 +81,11 @@ class MenuController
     system "clear"
     puts "New AddressBloc Entry"
     print "Name: "
-    name = gets.chomp
+    name = STDIN.gets.chomp
     print "Phone number: "
-    phone = gets.chomp
+    phone = STDIN.gets.chomp
     print "Email: "
-    email = gets.chomp
+    email = STDIN.gets.chomp
 
     address_book.add_entry(name, phone, email)
 
@@ -93,7 +95,7 @@ class MenuController
 
   def search_entries
     print "Search by name: "
-    name = gets.chomp
+    name = STDIN.gets.chomp
     match = @address_book.find_entry(name)
     system "clear"
     if match
@@ -106,7 +108,7 @@ class MenuController
 
   def read_csv
     print "Enter CSV file to import: "
-    file_name = gets.chomp
+    file_name = STDIN.gets.chomp
 
     if file_name.empty?
       system "clear"
@@ -131,7 +133,7 @@ class MenuController
     puts "e - edit this entry"
     puts "m - return to main menu"
 
-    selection = gets.chomp
+    selection = STDIN.gets.chomp
 
     case selection
       when "n"
@@ -158,16 +160,16 @@ class MenuController
   def edit_entry(entry)
     updates = {}
     print "Updated name: "
-    name = gets.chomp
+    name = STDIN.gets.chomp
     updates[:name] = name unless name.empty?
     print "Updated phone number: "
-    phone_number = gets.chomp
+    phone_number = STDIN.gets.chomp
     updates[:phone_number] =  phone_number unless phone_number.empty?
     print "Updated email: "
-    email = gets.chomp
+    email = STDIN.gets.chomp
     updates[:email] = email unless email.empty?
     entry.update_attributes(updates)
-    system "clear"
+    # system "clear"
     puts "Updated entry:"
     puts Entry.find(entry.id)
   end
@@ -176,7 +178,7 @@ class MenuController
     puts "\nd - delete entry"
     puts "e - edit this entry"
     puts "m - return to main menu"
-    selection = gets.chomp
+    selection = STDIN.gets.chomp
 
     case selection
       when "d"

@@ -3,9 +3,16 @@ require_relative '../models/entry'
 require_relative '../models/client'
 require_relative '../models/customer'
 require_relative '../models/loan'
+require_relative 'config'
 require 'bloc_record'
  
-BlocRecord.connect_to('db/address_bloc.sqlite')
+arg = ARGV[0]
+
+if arg.to_s == 'pg'
+	BlocRecord.connect_to(options(arg), :pg)
+else
+	BlocRecord.connect_to(options(arg), :sqlite3)
+end
 
 client = Client.create(name: 'Walmart', address_1: '1 main plaza drive', city: 'trash heap', state: 'zz', zip: '98765-4321')
 	book = AddressBook.create(client_id: client.id, name: 'My Address Book')

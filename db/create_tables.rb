@@ -1,16 +1,33 @@
 require 'sqlite3'
+require 'pg'
+require_relative 'config'
 
-db = SQLite3::Database.new "db/address_bloc.sqlite"
+module PG
+	class Connection
+		def execute(sql)
+			self.exec(sql).values
+		end
+	end
+end
 
-db.execute("DROP TABLE client");
-db.execute("DROP TABLE customer");
-db.execute("DROP TABLE loan");
-db.execute("DROP TABLE address_book;");
+arg = ARGV[0]
+if arg.to_s == 'pg'
+	db = PG::Connection.new(options(arg))
+	id_type = 'BIGSERIAL'
+else
+	db = SQLite3::Database.new options(arg)
+	id_type = 'INTEGER'
+end
+
 db.execute("DROP TABLE entry;");
+db.execute("DROP TABLE address_book;");
+db.execute("DROP TABLE loan");
+db.execute("DROP TABLE customer");
+db.execute("DROP TABLE client");
 
 sql = <<-SQL 
 	CREATE TABLE client (
-		id INTEGER PRIMARY KEY,
+		id #{id_type} PRIMARY KEY,
 		name VARCHAR(30),
 		title VARCHAR(30),
 		address_1 VARCHAR(50),
@@ -24,7 +41,7 @@ db.execute sql
 
 sql = <<-SQL 
 	CREATE TABLE customer (
-		id INTEGER PRIMARY KEY,
+		id #{id_type} PRIMARY KEY,
 		client_id INTEGER,
 		name VARCHAR(30),
 		region VARCHAR(10),
@@ -38,7 +55,7 @@ db.execute sql
 
 sql = <<-SQL 
 	CREATE TABLE loan (
-		id INTEGER PRIMARY KEY,
+		id #{id_type} PRIMARY KEY,
 		customer_id INTEGER,
 		name VARCHAR(30),
 		type VARCHAR(2),
@@ -51,7 +68,7 @@ db.execute sql
 
 sql = <<-SQL 
 	CREATE TABLE address_book (
-		id INTEGER PRIMARY KEY,
+		id #{id_type} PRIMARY KEY,
 		client_id INTEGER,
 		name VARCHAR(30),
 		FOREIGN KEY (client_id) REFERENCES client(id)
@@ -61,7 +78,7 @@ db.execute sql
 
 sql = <<-SQL 
 	CREATE TABLE entry (
-		id INTEGER PRIMARY KEY,
+		id #{id_type} PRIMARY KEY,
 		address_book_id INTEGER,
 		name VARCHAR(30),
 		phone_number VARCHAR(30),
