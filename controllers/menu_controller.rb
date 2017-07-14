@@ -169,7 +169,7 @@ class MenuController
     email = STDIN.gets.chomp
     updates[:email] = email unless email.empty?
     entry.update_attributes(updates)
-    # system "clear"
+    system "clear"
     puts "Updated entry:"
     puts Entry.find(entry.id)
   end
